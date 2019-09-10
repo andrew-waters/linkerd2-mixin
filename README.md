@@ -1,4 +1,4 @@
-# linkerd2-mixin
+# linkerd2 Monitoring Mixin for Grafana
 
 This mixin is a jsonnet package which can be used standalone or as part of your own config.
 

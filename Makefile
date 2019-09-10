@@ -1,5 +1,5 @@
 
 .PHONY: dashboards
 dashboards: # genereate the linkerd2 dashboards for Grafana
-		@mkdir -p dashboards
-		jsonnet -J vendor -m dashboards lib/dashboards.jsonnet
+		@mkdir -p dashboards_output
+		jsonnet -J vendor -m dashboards_output lib/dashboards.jsonnet
