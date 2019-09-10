@@ -2,7 +2,7 @@
 
 This mixin is a jsonnet package which can be used standalone or as part of your own config.
 
-It generates Grafana dashboards for [linkerd2](https://github.com/linkerd/linkerd2) montioring and can work in standalone or multi cluster setups.
+It generates Grafana dashboards for [linkerd2](https://github.com/linkerd/linkerd2) monitoring and can work in standalone (default) or in [multi cluster](#multi-cluster-support) setups.
 
 ## How to use
 
@@ -71,7 +71,7 @@ linkerd2 {
 
 ## Customising the mixin
 
-The `linkerd2-mixin` also allows you to customise the name and tags for your dashbaords, which is very valuable when you are monitoring more than just `linkerd2`L
+The `linkerd2-mixin` also allows you to customise the name and tags for your dashbaords, which is very valuable when you are monitoring more than just `linkerd2`.
 
 ```jsonnet
 linkerd2 {
