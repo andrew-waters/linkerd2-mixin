@@ -9,6 +9,6 @@
 // (import 'prometheus-benchmark.libsonnet') +
 // (import 'prometheus.libsonnet') +
 // (import 'replicationcontroller.libsonnet') +
-// (import 'service.libsonnet') +
+(import 'service.libsonnet') +
 (import 'statefulset.libsonnet') +
 (import 'top-line.libsonnet')

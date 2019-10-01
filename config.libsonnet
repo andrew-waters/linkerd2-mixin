@@ -37,6 +37,9 @@
       'statefulset': {
         'namespacesMonitored': 'NAMESPACES MONITORED'
       },
+      'service': {
+        'namespacesMonitored': 'NAMESPACES MONITORED'
+      },
     },
 
   },
