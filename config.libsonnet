@@ -34,6 +34,9 @@
       'top-line': {
         'namespacesMonitored': 'NAMESPACES MONITORED'
       },
+      'statefulset': {
+        'namespacesMonitored': 'NAMESPACES MONITORED'
+      },
     },
 
   },
