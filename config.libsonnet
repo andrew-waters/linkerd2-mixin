@@ -43,6 +43,9 @@
       'replicationcontroller': {
         'namespacesMonitored': 'NAMESPACES MONITORED'
       },
+      'prometheus': {
+        'namespacesMonitored': 'NAMESPACES MONITORED'
+      },
     },
 
   },
