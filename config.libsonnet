@@ -40,6 +40,9 @@
       'service': {
         'namespacesMonitored': 'NAMESPACES MONITORED'
       },
+      'replicationcontroller': {
+        'namespacesMonitored': 'NAMESPACES MONITORED'
+      },
     },
 
   },
