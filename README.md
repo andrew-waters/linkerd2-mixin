@@ -63,8 +63,10 @@ You can now take advantage of these labels within the mixin by using the followi
 ```jsonnet
 linkerd2 {
   _config+:: {
-    multiCluster: true,
-    clusterLabel: '<clusterLabel>,
+    multiCluster: {
+      enabled: true,
+      label: '<clusterLabel>,
+    },
   },
 }
 ```
@@ -76,10 +78,14 @@ The `linkerd2-mixin` also allows you to customise the name and tags for your das
 ```jsonnet
 linkerd2 {
   _config+:: {
-    multiCluster: true,
-    clusterLabel: 'cluster',
-    dashboardNamePrefix: 'Linkerd2 / ',
-    dashboardTags: ['linkerd', 'infrastucture'],
+    multiCluster: {
+      enabled: true,
+      label: 'cluster',
+    },
+    dashboard: {
+      namePrefix: 'Linkerd2 / ',
+      tags: ['linkerd', 'infrastucture'],
+    }
   },
 }
 ```

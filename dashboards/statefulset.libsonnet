@@ -20,14 +20,14 @@ local singlestat = g.singlestat;
         .addTarget(prometheus.target('count(count(request_total{namespace=~\"$namespace\"}) by (namespace))' % $._config));
 
       dashboard.new(
-        '%(dashboardNamePrefix)sStatefulSet' % $._config.meta,
+        '%(namePrefix)sStatefulSet' % $._config.dashboard,
         time_from='now-5m',
         uid=($._config.dashboardIDs['statefulset.json']),
-        tags=($._config.meta.dashboardTags),
+        tags=($._config.dashboard.tags),
         editable=true,
       )
       .addTemplate(
-        common.cluster($._config.datasource, $._config.showMultiCluster, $._config.clusterLabel, $._config.clusterLabelName),
+        common.cluster($._config.datasource, $._config.multiCluster.enabled, $._config.multiCluster.label, $._config.multiCluster.labelName),
       )
       .addTemplate(
         common.namespace($._config.datasource, true),

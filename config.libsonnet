@@ -21,14 +21,16 @@
       'top-line.json': 'OOYcndcc6bvkJGmE53ZKFuGeI4ksEZIu6YVdbcHk',
     },
 
-    meta: {
-      dashboardNamePrefix: 'Linkerd2 / ',
-      dashboardTags: ['linkerd', 'mesh', 'ops'],
+    dashboard: {
+      namePrefix: 'Linkerd2 / ',
+      tags: ['linkerd', 'mesh', 'ops'],
     },
 
-    showMultiCluster: true,       // show multi cluster options
-    clusterLabel: 'cluster',      // the prometheus label you use to identify the cluster
-    clusterLabelName: 'Cluster',  // used as the name for the drop down
+    multiCluster: {
+      enabled: false,       // build with multi cluster options
+      label: 'cluster',     // the prometheus label you use to identify the cluster
+      labelName: 'Cluster', // used as the name for the drop down
+    },
 
     titles: {
       'top-line': {
