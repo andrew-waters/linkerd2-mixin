@@ -98,6 +98,6 @@ linkerd2 {
 
 ## Intervals and scrape frequencies
 
-Generally speaking,if you're running a multicluster setup, you're going to be scraping a bit slower than Linekrd's Prometheus will be. This breaks some graphs which depend on Range Vector selectors with 30s intervals.
+Generally speaking, if you're running a multi cluster setup, you're going to be scraping a bit slower than Linkerd's Prometheus will be. This breaks some graphs which depend on Range Vector selectors with 30s intervals.
 
-To counter this, there is an additional variable on each dashboard if you don't want to update your scrape freqency called `interval`. In most cases, setting this to one minute will be enough to visualise requests over time, but your mileage will vary.
+To counter this, there is an additional variable on each dashboard if you don't want to update your scrape freqency called `interval`. In most cases, setting this to `1m` (one minute) will be enough to visualise requests over time, but your mileage will vary.
