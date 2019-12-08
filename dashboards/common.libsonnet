@@ -49,7 +49,7 @@ local singlestat = g.singlestat;
       label: label,
       name: 'namespace',
       options: [],
-      query: 'label_values(process_start_time_seconds, namespace)',
+      query: 'label_values(process_start_time_seconds{cluster=~"$cluster"}, namespace)',
       refresh: 2,
       regex: '',
       type: 'query',
@@ -68,7 +68,7 @@ local singlestat = g.singlestat;
       label: null,
       name: 'deployment',
       options: [],
-      query: 'label_values(process_start_time_seconds{deployment!=""}, deployment)',
+      query: 'label_values(process_start_time_seconds{cluster=~"$cluster", deployment!=""}, deployment)',
       refresh: 2,
       regex: '',
       type: 'query',
@@ -123,7 +123,7 @@ local singlestat = g.singlestat;
         '#299c46'
       ],
     )
-    .addTarget(prometheus.target('count(count(request_total{namespace=~"$namespace"}) by (namespace))' % config)),
+    .addTarget(prometheus.target('count(count(request_total{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace))' % config)),
 
   deploymentCount(config):: 
     singlestat.new(
@@ -138,6 +138,6 @@ local singlestat = g.singlestat;
         '#299c46'
       ],
     )
-    .addTarget(prometheus.target('count(count(request_total{namespace=~"$namespace"}) by (namespace, deployment))' % config)),
+    .addTarget(prometheus.target('count(count(request_total{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace, deployment))' % config)),
 
 }
