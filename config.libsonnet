@@ -24,23 +24,40 @@
     },
 
     multiCluster: {
-      enabled: false,       // build with multi cluster options
+      enabled: true,       // build with multi cluster options
       label: 'cluster',     // the prometheus label you use to identify the cluster
       labelName: 'Cluster', // used as the name for the drop down
     },
 
+    namespace: {
+      label: 'Namespace'
+    },
+
+    loki: {
+      enabled: false,
+    },
+
     titles: {
-      'top-line': {
-        'namespacesMonitored': 'NAMESPACES MONITORED'
+      common: {
+        successRate: 'SUCCESS RATE',
+        requestVolume: 'REQUEST VOLUME',
       },
-      'statefulset': {
-        'namespacesMonitored': 'NAMESPACES MONITORED'
+
+      topLine: {
+        globalRequestVolume: 'GLOBAL REQUEST VOLUME',
+        globalSuccessRate: 'GLOBAL SUCCESS RATE',
+        SuccessRate: 'GLOBAL SUCCESS RATE',
+        namespacesMonitored: 'NAMESPACES MONITORED',
+        deploymentsMonitored: 'DEPLOYMENTS MONITORED',
       },
-      'service': {
-        'namespacesMonitored': 'NAMESPACES MONITORED'
+      statefulSet: {
+        namespacesMonitored: 'NAMESPACES MONITORED',
       },
-      'replicationcontroller': {
-        'namespacesMonitored': 'NAMESPACES MONITORED'
+      service: {
+        namespacesMonitored: 'NAMESPACES MONITORED',
+      },
+      replicationController: {
+        namespacesMonitored: 'NAMESPACES MONITORED',
       },
     },
 
