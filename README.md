@@ -94,6 +94,7 @@ linkerd2 {
 
  - Multi cluster support for a single pane of glass
  - Interval variable for custom scrape frequencies
+ - Loki logs
 
 
 ## Intervals and scrape frequencies
@@ -105,3 +106,5 @@ To counter this, there is an additional variable on each dashboard if you don't 
 ## Todo
 
 Javascript in `common.header` to check most recent linkerd version.
+
+Add Loki logs

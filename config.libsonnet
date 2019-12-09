@@ -2,6 +2,7 @@
   _config+:: {
 
     datasource: 'prometheus',
+    branded: true,  // enable/disable linkerd header branding
 
     dashboardIDs: {
       'authority.json': 'AMXeShbu5yvniWYLxst1GXe3a01P66Y2VZSQ2osZ',
@@ -51,6 +52,7 @@
         namespacesMonitored: 'NAMESPACES MONITORED',
         deploymentsMonitored: 'DEPLOYMENTS MONITORED',
         topLineHeader: 'TOP LINE',
+        namespacesHeader: 'NAMESPACES',
       },
       statefulSet: {
         namespacesMonitored: 'NAMESPACES MONITORED',

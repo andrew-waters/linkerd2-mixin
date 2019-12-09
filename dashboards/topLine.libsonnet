@@ -9,6 +9,13 @@ local singlestat = g.singlestat;
 {
   grafanaDashboards+:: {
     'top-line.json':
+
+      local r = 
+        if $._config.branded == true then
+          row.new().addPanel(common.branding($._config), { h: 3, w: 24, x: 0, y: 0 })
+        else
+          row.new();
+
       dashboard.new(
         '%(namePrefix)sTop Line' % $._config.dashboard,
         time_from='now-5m',
@@ -29,12 +36,9 @@ local singlestat = g.singlestat;
         common.interval(true),
       )
       .addRow(
-        row.new()
-
-        .addPanel(common.branding(), { h: 3, w: 24, x: 0, y: 0 })
 
         # Global Success Rate
-        .addPanel(
+        r.addPanel(
           singlestat.new(
             $._config.titles.topLine.globalSuccessRate,
             datasource='%(datasource)s' % $._config.datasource,
@@ -117,6 +121,8 @@ local singlestat = g.singlestat;
           $._config,
           'histogram_quantile(0.95, sum(irate(response_latency_ms_bucket{cluster=~"$cluster", direction="inbound"}[$interval])) by (le, namespace))',
         ))
+
+        .addPanel(common.header($._config.titles.topLine.namespacesHeader), { h: 2, w: 24, x: 0, y: 13 })
 
       ),
   },

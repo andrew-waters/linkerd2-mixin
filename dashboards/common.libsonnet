@@ -6,19 +6,12 @@ local text = g.text;
 
 {
 
-  branding:: function()
-    {
-      content: '<img src="https://linkerd.io/images/identity/svg/linkerd_primary_color_white.svg" style="height: 30px;">',
-      datasource: null,
-      height: '1px',
-      id: 14,
-      links: [],
-      mode: 'html',
-      options: {},
-      title: '',
-      transparent: true,
-      type: 'text'
-    },
+  branding:: function(config)
+    text.new(
+      mode='html',
+      transparent=true,
+      content='<img src="https://linkerd.io/images/identity/svg/linkerd_primary_color_white.svg" style="height: 30px;">',
+    ),
 
   header(content)::
     text.new(
