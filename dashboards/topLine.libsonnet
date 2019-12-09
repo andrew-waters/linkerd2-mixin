@@ -10,8 +10,7 @@ local graphPanel = g.graphPanel;
 {
   grafanaDashboards+:: {
     'top-line.json':
-
-      local d = dashboard.new(
+      dashboard.new(
         '%(namePrefix)sTop Line' % $._config.dashboard,
         time_from='now-5m',
         uid=($._config.dashboardIDs['top-line.json']),
@@ -30,12 +29,12 @@ local graphPanel = g.graphPanel;
       )
       .addTemplate(
         common.interval(true),
-      );
-
-      // if $._config.branded then 
-      //   d.addPanel(common.branding($._config), { h: 3, w: 24, x: 0, y: 0 })
-
-      d.addPanel(
+      )
+      .addPanel(
+        common.branding($._config),
+        { h: 3, w: 24, x: 0, y: 0 }
+      )
+      .addPanel(
         singlestat.new(
           $._config.titles.topLine.globalSuccessRate,
           datasource='%(datasource)s' % $._config.datasource,
@@ -124,7 +123,7 @@ local graphPanel = g.graphPanel;
         common.successRateGraph(
           $._config,
           'sum(irate(response_total{classification="success", cluster=~"$cluster", namespace="$namespace", direction="inbound"}[$interval])) by (deployment) / sum(irate(response_total{cluster=~"$cluster", namespace="$namespace", direction="inbound"}[$interval])) by (deployment)',
-          'Success Rate',
+          'deploy/{{deployment}}',
           null,
         ),
         { h: 8, w: 8, x: 0, y: 19 }
