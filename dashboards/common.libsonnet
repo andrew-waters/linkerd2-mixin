@@ -160,6 +160,7 @@ local text = g.text;
       format='percentunit',
       min=0,
       max=1,
+      value_type='shared',
     )
     .addTarget(prometheus.target(
       query,
@@ -167,7 +168,46 @@ local text = g.text;
       intervalFactor=1,
     )),
 
-  // requestVolumeGraph(config, query)::
-  // p95LatencyGraph(config, query)::
+  requestVolumeGraph(config, tls, notls)::
+    graph_panel.new(
+      config.titles.common.requestVolume,
+      datasource='%(datasource)s' % config.datasource,
+      linewidth=2,
+      fill=false,
+      sort='decreasing',
+      legend_show=false,
+      format='rps',
+      min=0,
+      max=null,
+      value_type='shared',
+    )
+    .addTarget(prometheus.target(
+      tls.query,
+      legendFormat=tls.legend,
+      intervalFactor=1,
+    ))
+    .addTarget(prometheus.target(
+      notls.query,
+      legendFormat=notls.legend,
+      intervalFactor=1,
+    )),
+
+  p95LatencyGraph(config, query)::
+    graph_panel.new(
+      config.titles.common.p95Latency,
+      datasource='%(datasource)s' % config.datasource,
+      linewidth=2,
+      sort='decreasing',
+      legend_show=false,
+      format='ms',
+      min=0,
+      max=null,
+      value_type='shared',
+    )
+    .addTarget(prometheus.target(
+      query,
+      legendFormat='p95 ns/{{namespace}}',
+      intervalFactor=1,
+    )),
 
 }

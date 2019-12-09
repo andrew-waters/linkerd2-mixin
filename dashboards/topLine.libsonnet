@@ -96,7 +96,27 @@ local singlestat = g.singlestat;
 
         .addPanel(common.header($._config.titles.topLine.topLineHeader), { h: 2, w: 24, x: 0, y: 7 })
 
-        .addPanel(common.successRateGraph($._config, 'sum(irate(response_total{classification="success", cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment) / sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment)'))
+        .addPanel(common.successRateGraph(
+          $._config,
+          'sum(irate(response_total{classification="success", cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment) / sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment)',
+        ))
+
+        .addPanel(common.requestVolumeGraph(
+          $._config,
+          {
+            query: 'sum(irate(request_total{cluster=~"$cluster", direction="inbound", tls="true"}[$interval])) by (namespace)',
+            legend: '🔒ns/{{namespace}}',
+          },
+          {
+            query: 'sum(irate(request_total{cluster=~"$cluster", direction="inbound", tls!="true"}[$interval])) by (namespace)',
+            legend: 'ns/{{namespace}}',
+          },
+        ))
+
+        .addPanel(common.p95LatencyGraph(
+          $._config,
+          'histogram_quantile(0.95, sum(irate(response_latency_ms_bucket{cluster=~"$cluster", direction="inbound"}[$interval])) by (le, namespace))',
+        ))
 
       ),
   },
