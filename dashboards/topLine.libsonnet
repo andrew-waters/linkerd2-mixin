@@ -1,11 +1,11 @@
 local g = import 'grafonnet/grafana.libsonnet';
 local common = import 'common.libsonnet';
 local dashboard = g.dashboard;
-local row = g.row;
-local prometheus = g.prometheus;
-local template = g.template;
-local singlestat = g.singlestat;
 local graphPanel = g.graphPanel;
+local prometheus = g.prometheus;
+local row = g.row;
+local singlestat = g.singlestat;
+local template = g.template;
 
 {
   grafanaDashboards+:: {

@@ -32,6 +32,7 @@ local text = g.text;
       sort=1,
       refresh=2,
       current='all',
+      multi=true,
     ),
 
   namespace(ds, show, label)::
@@ -45,6 +46,7 @@ local text = g.text;
       sort=1,
       refresh=2,
       current='all',
+      multi=true,
     ),
 
   deployment(ds, show)::
@@ -58,6 +60,7 @@ local text = g.text;
       sort=1,
       refresh=2,
       current='all',
+      multi=true,
     ),
 
   interval(show)::
