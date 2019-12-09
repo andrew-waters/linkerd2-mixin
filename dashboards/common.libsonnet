@@ -2,6 +2,7 @@ local g = import 'grafonnet/grafana.libsonnet';
 local graph_panel = g.graphPanel;
 local prometheus = g.prometheus;
 local singlestat = g.singlestat;
+local template = g.template;
 local text = g.text;
 
 {
@@ -20,100 +21,53 @@ local text = g.text;
       content='<div class="text-center dashboard-header"><span>%(content)s</span></div>' % content,
     ),
 
-  cluster:: function(ds, show, label, name)
-    {
-      current: {
-        text: 'All',
-        value: '$__all',
-      },
-      datasource: ds,
-      hide: if show then 0 else 2,
-      includeAll: true,
-      label: name,
-      name: 'cluster',
-      options: [],
-      query: 'label_values(process_start_time_seconds, cluster)', // $label
-      refresh: 2,
-      sort: 1,
-      regex: '',
-      type: 'query',
-      useTags: false,
-    },
+  cluster(ds, show, name, label)::
+    template.new(
+      name,
+      ds,
+      'label_values(process_start_time_seconds, cluster)',
+      label=label,
+      hide=(if show then '' else 2),
+      includeAll=true,
+      sort=1,
+      refresh=2,
+      current='all',
+    ),
 
-  namespace:: function(ds, show, label)
-    {
-      current: {
-        text: 'All',
-        value: '$__all',
-      },
-      datasource: ds,
-      hide: if show then 0 else 2,
-      includeAll: true,
-      label: label,
-      name: 'namespace',
-      options: [],
-      query: 'label_values(process_start_time_seconds{cluster=~"$cluster"}, namespace)',
-      refresh: 2,
-      sort: 1,
-      regex: '',
-      type: 'query',
-      useTags: false,
-    },
+  namespace(ds, show, label)::
+    template.new(
+      'namespace',
+      ds,
+      'label_values(process_start_time_seconds{cluster=~"$cluster"}, namespace)',
+      label=label,
+      hide=(if show then '' else 2),
+      includeAll=true,
+      sort=1,
+      refresh=2,
+      current='all',
+    ),
 
-  deployment:: function(ds, show)
-    {
-      current: {
-        text: 'All',
-        value: '$__all',
-      },
-      datasource: ds,
-      hide: if show then 0 else 2,
-      includeAll: true,
-      label: null,
-      name: 'deployment',
-      options: [],
-      query: 'label_values(process_start_time_seconds{cluster=~"$cluster", deployment!=""}, deployment)',
-      refresh: 2,
-      sort: 1,
-      regex: '',
-      type: 'query',
-      useTags: false,
-    },
+  deployment(ds, show)::
+    template.new(
+      'deployment',
+      ds,
+      'label_values(process_start_time_seconds{cluster=~"$cluster", deployment!=""}, deployment)',
+      label=null,
+      hide=(if show then '' else 2),
+      includeAll=true,
+      sort=1,
+      refresh=2,
+      current='all',
+    ),
 
-  interval:: function(show)
-    {
-      auto: false,
-      auto_count: 30,
-      auto_min: "10s",
-      current: {
-        text: "1m",
-        value: "1m"
-      },
-      hide: 0,
-      label: "Interval",
-      name: "interval",
-      options: [
-        {
-          selected: true,
-          text: "30s",
-          value: "30s"
-        },
-        {
-          selected: false,
-          text: "1m",
-          value: "1m"
-        },
-        {
-          selected: false,
-          text: "2m",
-          value: "2m"
-        }
-      ],
-      query: "30s,1m,2m",
-      refresh: 2,
-      skipUrlSync: false,
-      type: "interval"
-    },
+  interval(show)::
+    template.interval(
+      'interval',
+      '30s,1m,2m',
+      '1m',
+      hide=(if show then ''),
+      label='Interval',
+    ),
 
   namespaceCount(config)::
     singlestat.new(
