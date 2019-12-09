@@ -49,6 +49,7 @@
         SuccessRate: 'GLOBAL SUCCESS RATE',
         namespacesMonitored: 'NAMESPACES MONITORED',
         deploymentsMonitored: 'DEPLOYMENTS MONITORED',
+        topLineHeader: 'TOP LINE',
       },
       statefulSet: {
         namespacesMonitored: 'NAMESPACES MONITORED',

@@ -18,6 +18,20 @@ local singlestat = g.singlestat;
       type: 'text'
     },
 
+  header:: function(text)
+    {
+      content: '<div class="text-center dashboard-header"><span>%(text)s</span></div>' % text,
+      datasource: null,
+      height: '1px',
+      id: 14,
+      links: [],
+      mode: 'html',
+      options: {},
+      title: '',
+      transparent: true,
+      type: 'text'
+    },
+
   cluster:: function(ds, show, label, name)
     {
       current: {

@@ -31,12 +31,7 @@ local singlestat = g.singlestat;
       .addRow(
         row.new()
 
-        .addPanel(common.branding(), {
-          h: 3,
-          w: 24,
-          x: 0,
-          y: 0,
-        })
+        .addPanel(common.branding(), { h: 3, w: 24, x: 0, y: 0 })
 
         # Global Success Rate
         .addPanel(
@@ -63,13 +58,11 @@ local singlestat = g.singlestat;
             gaugeThresholdMarkers=true,
             gaugeThresholdLabels=false,
           )
-          .addTarget(prometheus.target('sum(irate(response_total{classification="success", cluster=~"$cluster", deployment=~"$deployment"}[$interval])) / sum(irate(response_total{cluster=~"$cluster", deployment=~"$deployment"}[$interval]))' % $._config)),
-          {
-            h: 4,
-            w: 8,
-            x: 0,
-            y: 3,
-          },
+          .addTarget(prometheus.target(
+            'sum(irate(response_total{classification="success", cluster=~"$cluster", deployment=~"$deployment"}[$interval])) / sum(irate(response_total{cluster=~"$cluster", deployment=~"$deployment"}[$interval]))' % $._config,
+            intervalFactor=1,
+          )),
+          { h: 4, w: 8, x: 0, y: 3 },
         )
 
         # Global Request Volume
@@ -84,35 +77,24 @@ local singlestat = g.singlestat;
               'rgba(237, 129, 40, 0.89)',
               '#299c46'
             ],
-            colorValue=true,
             format='rps',
             sparklineShow=true,
             sparklineFillColor='rgba(31, 118, 189, 0.18)',
             sparklineFull=true,
             sparklineLineColor='rgb(31, 120, 193)',
           )
-          .addTarget(prometheus.target('sum(irate(request_total{cluster=~"$cluster", deployment=~"$deployment"}[$interval]))' % $._config)),
-          {
-            h: 4,
-            w: 8,
-            x: 8,
-            y: 3,
-          },
+          .addTarget(prometheus.target(
+            'sum(irate(request_total{cluster=~"$cluster", deployment=~"$deployment"}[$interval]))' % $._config,
+            intervalFactor=2,
+          )),
+          { h: 4, w: 8, x: 8, y: 3 },
         )
 
-        .addPanel(common.namespaceCount($._config), {
-          h: 4,
-          w: 4,
-          x: 16,
-          y: 3,
-        })
-        .addPanel(common.deploymentCount($._config), {
-          h: 4,
-          w: 4,
-          x: 20,
-          y: 3,
-        })
+        .addPanel(common.namespaceCount($._config), { h: 4, w: 4, x: 16, y: 3 })
 
+        .addPanel(common.deploymentCount($._config), { h: 4, w: 4, x: 20, y: 3 })
+
+        .addPanel(common.header($._config.titles.topLine.topLineHeader), { h: 2, w: 24, x: 0, y: 7 },)
       ),
   },
 }
