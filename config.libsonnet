@@ -41,6 +41,7 @@
       common: {
         successRate: 'SUCCESS RATE',
         requestVolume: 'REQUEST VOLUME',
+        p95Latency: 'P95 LATENCY',
       },
 
       topLine: {

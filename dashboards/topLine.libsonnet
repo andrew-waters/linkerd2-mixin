@@ -94,7 +94,10 @@ local singlestat = g.singlestat;
 
         .addPanel(common.deploymentCount($._config), { h: 4, w: 4, x: 20, y: 3 })
 
-        .addPanel(common.header($._config.titles.topLine.topLineHeader), { h: 2, w: 24, x: 0, y: 7 },)
+        .addPanel(common.header($._config.titles.topLine.topLineHeader), { h: 2, w: 24, x: 0, y: 7 })
+
+        .addPanel(common.successRateGraph($._config, 'sum(irate(response_total{classification="success", cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment) / sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment)'))
+
       ),
   },
 }

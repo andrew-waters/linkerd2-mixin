@@ -1,6 +1,8 @@
 local g = import 'grafonnet/grafana.libsonnet';
+local graph_panel = g.graphPanel;
 local prometheus = g.prometheus;
 local singlestat = g.singlestat;
+local text = g.text;
 
 {
 
@@ -18,19 +20,12 @@ local singlestat = g.singlestat;
       type: 'text'
     },
 
-  header:: function(text)
-    {
-      content: '<div class="text-center dashboard-header"><span>%(text)s</span></div>' % text,
-      datasource: null,
-      height: '1px',
-      id: 14,
-      links: [],
-      mode: 'html',
-      options: {},
-      title: '',
-      transparent: true,
-      type: 'text'
-    },
+  header(content)::
+    text.new(
+      mode='html',
+      transparent=true,
+      content='<div class="text-center dashboard-header"><span>%(content)s</span></div>' % content,
+    ),
 
   cluster:: function(ds, show, label, name)
     {
@@ -153,5 +148,26 @@ local singlestat = g.singlestat;
       ],
     )
     .addTarget(prometheus.target('count(count(request_total{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace, deployment))' % config)),
+
+
+  successRateGraph(config, query)::
+    graph_panel.new(
+      config.titles.common.successRate,
+      datasource='%(datasource)s' % config.datasource,
+      linewidth=2,
+      sort='decreasing',
+      legend_show=false,
+      format='percentunit',
+      min=0,
+      max=1,
+    )
+    .addTarget(prometheus.target(
+      query,
+      legendFormat='deploy/{{deployment}}',
+      intervalFactor=1,
+    )),
+
+  // requestVolumeGraph(config, query)::
+  // p95LatencyGraph(config, query)::
 
 }
