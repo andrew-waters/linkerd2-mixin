@@ -1,8 +1,9 @@
 {
   _config+:: {
 
-    datasource: 'prometheus',
-    branded: true,  // enable/disable linkerd header branding
+    datasource: 'prometheus', // datasource name for your metrics
+    branded: false,            // enable/disable linkerd header branding
+    schemaVersion: 18,        // grafana dashboard schema version
 
     dashboardIDs: {
       'authority.json': 'AMXeShbu5yvniWYLxst1GXe3a01P66Y2VZSQ2osZ',
@@ -25,7 +26,7 @@
     },
 
     multiCluster: {
-      enabled: true,       // build with multi cluster options
+      enabled: true,        // build with multi cluster options
       label: 'cluster',     // the prometheus label you use to identify the cluster
       labelName: 'Cluster', // used as the name for the drop down
     },

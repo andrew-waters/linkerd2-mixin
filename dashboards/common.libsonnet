@@ -34,6 +34,7 @@ local text = g.text;
       options: [],
       query: 'label_values(process_start_time_seconds, cluster)', // $label
       refresh: 2,
+      sort: 1,
       regex: '',
       type: 'query',
       useTags: false,
@@ -53,6 +54,7 @@ local text = g.text;
       options: [],
       query: 'label_values(process_start_time_seconds{cluster=~"$cluster"}, namespace)',
       refresh: 2,
+      sort: 1,
       regex: '',
       type: 'query',
       useTags: false,
@@ -72,6 +74,7 @@ local text = g.text;
       options: [],
       query: 'label_values(process_start_time_seconds{cluster=~"$cluster", deployment!=""}, deployment)',
       refresh: 2,
+      sort: 1,
       regex: '',
       type: 'query',
       useTags: false,
@@ -143,7 +146,7 @@ local text = g.text;
     .addTarget(prometheus.target('count(count(request_total{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace, deployment))' % config)),
 
 
-  successRateGraph(config, query)::
+  successRateGraph(config, query, legend, repeat)::
     graph_panel.new(
       config.titles.common.successRate,
       datasource='%(datasource)s' % config.datasource,
@@ -154,10 +157,11 @@ local text = g.text;
       min=0,
       max=1,
       value_type='shared',
+      repeat=repeat
     )
     .addTarget(prometheus.target(
       query,
-      legendFormat='deploy/{{deployment}}',
+      legendFormat=legend,
       intervalFactor=1,
     )),
 
