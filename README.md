@@ -61,8 +61,8 @@ Once your metrics are labelled by cluster, they will be available for filtering 
 You can now take advantage of these labels within the mixin by using the following (replace `<clusterLabel>` with the key of the cluster label, usually `cluster`):
 
 ```jsonnet
-linkerd2 {
-  _config+:: {
+{
+  linkerd+:: {
     multiCluster: {
       enabled: true,
       label: '<clusterLabel>,
@@ -88,6 +88,23 @@ linkerd2 {
     }
   },
 }
+```
+
+## Using in an existing project
+
+If you have an existing project that you want to use this mixin with, you can use it like the following:
+
+```jsonnet
+local c =
+  (import 'linkerd2-mixin/mixin.libsonnet') +
+  {
+    linkerd+:: {
+      datasource: 'prometheus',
+      // ... all other config options
+    },
+  };
+
+{ 'linkerd-dashboards': c.linkerd.dashboards }
 ```
 
 ## Adds
