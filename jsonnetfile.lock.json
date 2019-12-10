@@ -8,7 +8,7 @@
                     "subdir": "grafonnet"
                 }
             },
-            "version": "69bc267211790a1c3f4ea6e6211f3e8ffe22f987"
+            "version": "5d5d1c43d6e27ba3726a3a4b52f5b7f05d8d5fd2"
         },
         {
             "name": "grafana-builder",
@@ -18,7 +18,17 @@
                     "subdir": "grafana-builder"
                 }
             },
-            "version": "918277932b7e058481e4f227ca4f0e5237d1c2db"
+            "version": "8813f9108550cd510b17ce5a8bac9261dd140e13"
+        },
+        {
+            "name": "ksonnet",
+            "source": {
+                "git": {
+                    "remote": "https://github.com/ksonnet/ksonnet-lib",
+                    "subdir": ""
+                }
+            },
+            "version": "0d2f82676817bbf9e4acf6495b2090205f323b9f"
         }
     ]
 }
