@@ -4,7 +4,7 @@
 // (import 'grafana.libsonnet') +
 // (import 'health.libsonnet') +
 // (import 'job.libsonnet') +
-// (import 'pod.libsonnet') +
+(import 'pod.libsonnet') +
 // (import 'replicationcontroller.libsonnet') +
 // (import 'service.libsonnet') +
 // (import 'statefulset.libsonnet') +

@@ -8,29 +8,29 @@ local singlestat = g.singlestat;
 
 {
 
-  grafanaDashboards+:: {
+  dashboards+:: {
     'replicationcontroller.json':
       local namespacesMonitored =
         singlestat.new(
-          $._config.titles['replicationcontroller']['namespacesMonitored'],
-          datasource='%(datasource)s' % $._config.datasource,
+          $.linkerd.titles['replicationcontroller']['namespacesMonitored'],
+          datasource='%(datasource)s' % $.linkerd.datasource,
           span=2,
           valueName='current',
         )
-        .addTarget(prometheus.target('count(count(request_total{namespace=~\"$namespace\"}) by (namespace))' % $._config));
+        .addTarget(prometheus.target('count(count(request_total{namespace=~\"$namespace\"}) by (namespace))' % $.linkerd));
 
       dashboard.new(
-        '%(namePrefix)sReplicationController' % $._config.dashboard,
+        '%(namePrefix)sReplicationController' % $.linkerd.dashboard,
         time_from='now-5m',
-        uid=($._config.dashboardIDs['replicationcontroller.json']),
-        tags=($._config.dashboard.tags),
-        editable=true,
+        uid=($.linkerd.dashboardIDs['replicationcontroller.json']),
+        tags=($.linkerd.dashboard.tags),
+        editable=($.linkerd.dashboard.editable),
       )
       .addTemplate(
-        common.cluster($._config.datasource, $._config.multiCluster.enabled, $._config.multiCluster.label, $._config.multiCluster.labelName),
+        common.cluster($.linkerd.datasource, $.linkerd.multiCluster.enabled, $.linkerd.multiCluster.label, $.linkerd.multiCluster.labelName),
       )
       .addTemplate(
-        common.namespace($._config.datasource, true),
+        common.namespace($.linkerd.datasource, true),
       )
       .addRow(
         row.new()

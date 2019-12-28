@@ -28,6 +28,8 @@ local configMapList = k.core.v1.configMapList;
     dashboard: {
       namePrefix: 'Linkerd2 / ',
       tags: ['linkerd', 'mesh', 'ops'],
+      editable: true,
+      timeFrom: 'now-5m',
     },
 
     multiCluster: {
@@ -46,20 +48,62 @@ local configMapList = k.core.v1.configMapList;
 
     titles: {
       common: {
+        inbound: 'INBOUND',
+        outbound: 'OUTBOUND',
         successRate: 'SUCCESS RATE',
+
         requestVolume: 'REQUEST VOLUME',
+        requestRate: 'REQUEST RATE',
+        latency: 'LATENCY',
         p95Latency: 'P95 LATENCY',
+        traffic: {
+          inbound: 'INBOUND TRAFFIC',
+          outbound: 'OUTBOUND TRAFFIC',
+        },
+        tcp: {
+          inbound: 'INBOUND TCP',
+          outbound: 'OUTBOUND TCP',
+        },
       },
 
       topLine: {
         globalRequestVolume: 'GLOBAL REQUEST VOLUME',
         globalSuccessRate: 'GLOBAL SUCCESS RATE',
-        SuccessRate: 'GLOBAL SUCCESS RATE',
         namespacesMonitored: 'NAMESPACES MONITORED',
         deploymentsMonitored: 'DEPLOYMENTS MONITORED',
         topLineHeader: 'TOP LINE',
         namespacesHeader: 'NAMESPACES',
       },
+
+
+
+      pod: {
+        title: 'po/$pod',
+        traffic: {
+          title: 'Traffic',
+        },
+        tcp: {
+          title: 'TCP',
+          failures: 'TCP CONNECTION FAILURES',
+          open: 'TCP CONNECTIONS OPEN',
+          duration: 'TCP CONNECTION DURATION',
+        },
+        panels: {
+          inbound: 'INBOUND',
+          outbound: 'OUTBOUND',
+        },
+        pods: {
+          title: 'Pods',
+          inbound: 'INBOUND',
+          outbound: 'OUTBOUND',
+        },
+      },
+
+
+
+
+
+
       statefulSet: {
         namespacesMonitored: 'NAMESPACES MONITORED',
       },
@@ -68,6 +112,25 @@ local configMapList = k.core.v1.configMapList;
       },
       replicationController: {
         namespacesMonitored: 'NAMESPACES MONITORED',
+      },
+    },
+
+    legends: {
+      pods: {
+        secure: '🔒po/{{pod}}',
+        regular: 'po/{{pod}}',
+      },
+    },
+
+    style: {
+      colors: [
+        '#d44a3a',
+        'rgba(237, 129, 40, 0.89)',
+        '#299c46',
+      ],
+      spark: {
+        line: 'rgb(31, 120, 193)',
+        fill: 'rgba(31, 118, 189, 0.18)',
       },
     },
 
