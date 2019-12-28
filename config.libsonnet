@@ -67,6 +67,9 @@ local configMapList = k.core.v1.configMapList;
       },
 
       topLine: {
+        namespace: {
+          title: 'ns/$namespace',
+        },
         globalRequestVolume: 'GLOBAL REQUEST VOLUME',
         globalSuccessRate: 'GLOBAL SUCCESS RATE',
         namespacesMonitored: 'NAMESPACES MONITORED',
@@ -116,6 +119,14 @@ local configMapList = k.core.v1.configMapList;
     },
 
     legends: {
+      deployment: {
+        secure: '🔒deploy/{{deployment}}',
+        regular: 'deploy/{{deployment}}',
+      },
+      namespace: {
+        secure: '🔒ns/{{namespace}}',
+        regular: 'ns/{{namespace}}',
+      },
       pods: {
         secure: '🔒po/{{pod}}',
         regular: 'po/{{pod}}',

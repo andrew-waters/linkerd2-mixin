@@ -36,4 +36,16 @@
       open: 'tcp_open_connections{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", direction="%(direction)s"}',
     },
   },
+  topLine: {
+    success: 'sum(irate(response_total{classification="success", cluster=~"$cluster", deployment=~"$deployment"}[$interval])) / sum(irate(response_total{cluster=~"$cluster", deployment=~"$deployment"}[$interval]))',
+    volume: 'sum(irate(request_total{cluster=~"$cluster", deployment=~"$deployment"}[$interval]))',
+    successByDeployment: 'sum(irate(response_total{classification="success", cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment) / sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment)',
+    rate: 'sum(irate(request_total{cluster=~"$cluster", direction="inbound", tls%(tls)s"true"}[$interval])) by (namespace)',
+    quantile: 'histogram_quantile(%(quantile)s, sum(irate(response_latency_ms_bucket{cluster=~"$cluster", direction="inbound"}[$interval])) by (le, namespace))',
+    namespace: {
+      quantile: 'histogram_quantile(%(quantile)s, sum(irate(response_latency_ms_bucket{cluster=~"$cluster", namespace="$namespace", direction="inbound"}[$interval])) by (le, deployment))',
+      rate: 'sum(irate(request_total{cluster=~"$cluster", namespace="$namespace", direction="inbound", tls%(tls)s"true"}[$interval])) by (deployment)',
+      success: 'sum(irate(response_total{classification="success", cluster=~"$cluster", namespace=~"$namespace", direction="inbound"}[$interval])) by (deployment) / sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", direction="inbound"}[$interval])) by (deployment)',
+    },
+  },
 }

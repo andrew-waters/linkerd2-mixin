@@ -1,6 +1,9 @@
 local g = import 'grafonnet/grafana.libsonnet';
 local common = import 'common.libsonnet';
+local queries = import 'queries.libsonnet';
+
 local dashboard = g.dashboard;
+local q = queries.topLine;
 local graphPanel = g.graphPanel;
 local prometheus = g.prometheus;
 local row = g.row;
@@ -19,137 +22,143 @@ local template = g.template;
         schemaVersion=($.linkerd.schemaVersion),
         graphTooltip='shared_crosshair',
       )
+
+      // template
       .addTemplate(
-        common.cluster($.linkerd.datasource, $.linkerd.multiCluster.enabled, $.linkerd.multiCluster.label, $.linkerd.multiCluster.labelName),
+        common.cluster(
+          $.linkerd.datasource,
+          $.linkerd.multiCluster.enabled,
+          $.linkerd.multiCluster.label,
+          $.linkerd.multiCluster.labelName),
       )
       .addTemplate(
-        common.namespace($.linkerd.datasource, true, $.linkerd.namespace.label),
+        common.namespace(
+          $.linkerd.datasource,
+          true,
+          $.linkerd.namespace.label
+        ),
       )
       .addTemplate(
-        common.deployment($.linkerd.datasource, false),
+        common.deployment(
+          $.linkerd.datasource,
+          false,
+        ),
       )
       .addTemplate(
-        common.interval(true),
+        common.interval(
+          true
+        ),
       )
+
+      // title
       .addPanel(
-        common.branding($.linkerd),
+        common.branding(
+          $.linkerd
+        ),
         { h: 3, w: 24, x: 0, y: 0 }
       )
+
       .addPanel(
-        singlestat.new(
+        common.singleStatWithGuage(
+          $.linkerd,
           $.linkerd.titles.topLine.globalSuccessRate,
-          datasource='%(datasource)s' % $.linkerd.datasource,
-          valueName='current',
-          valueFontSize='80%',
-          thresholds='.9,.99',
-          colors=[
-            '#d44a3a',
-            'rgba(237, 129, 40, 0.89)',
-            '#299c46'
-          ],
-          colorValue=true,
-          format='percentunit',
-          sparklineShow=true,
-          sparklineFillColor='rgba(31, 118, 189, 0.18)',
-          sparklineFull=true,
-          sparklineLineColor='rgb(31, 120, 193)',
-          gaugeShow=true,
-          gaugeMinValue=0,
-          gaugeMaxValue=1,
-          gaugeThresholdMarkers=true,
-          gaugeThresholdLabels=false,
-          transparent=true,
-        )
-        .addTarget(prometheus.target(
-          'sum(irate(response_total{classification="success", cluster=~"$cluster", deployment=~"$deployment"}[$interval])) / sum(irate(response_total{cluster=~"$cluster", deployment=~"$deployment"}[$interval]))' % $.linkerd,
-          intervalFactor=1,
-        )),
+          q.success,
+        ),
         { h: 4, w: 8, x: 0, y: 3 },
       )
       .addPanel(
-        singlestat.new(
+        common.singleStatWithSparkLine(
+          $.linkerd,
           $.linkerd.titles.topLine.globalRequestVolume,
-          datasource='%(datasource)s' % $.linkerd.datasource,
-          valueName='current',
-          valueFontSize='80%',
-          colors=[
-            '#d44a3a',
-            'rgba(237, 129, 40, 0.89)',
-            '#299c46'
-          ],
-          format='rps',
-          sparklineShow=true,
-          sparklineFillColor='rgba(31, 118, 189, 0.18)',
-          sparklineFull=true,
-          sparklineLineColor='rgb(31, 120, 193)',
-          transparent=true,
-        )
-        .addTarget(prometheus.target(
-          'sum(irate(request_total{cluster=~"$cluster", deployment=~"$deployment"}[$interval]))' % $.linkerd,
-          intervalFactor=2,
-        )),
+          q.volume,
+        ),
         { h: 4, w: 8, x: 8, y: 3 },
       )
-      .addPanel(common.namespaceCount($.linkerd), { h: 4, w: 4, x: 16, y: 3 })
-      .addPanel(common.deploymentCount($.linkerd), { h: 4, w: 4, x: 20, y: 3 })
-      .addPanel(common.header($.linkerd.titles.topLine.topLineHeader), { h: 2, w: 24, x: 0, y: 7 })
+      .addPanel(
+        common.namespaceCount(
+          $.linkerd,
+        ),
+        { h: 4, w: 4, x: 16, y: 3 },
+      )
+      .addPanel(
+        common.deploymentCount(
+          $.linkerd,
+        ),
+        { h: 4, w: 4, x: 20, y: 3 },
+        )
+      .addPanel(
+        common.header(
+          $.linkerd.titles.topLine.topLineHeader,
+        ),
+        { h: 2, w: 24, x: 0, y: 7 },
+      )
       .addPanel(
         common.successRateGraph(
           $.linkerd,
-          '(%(direction)s) %(successRate)s' % [$.linkerd.titles.common.inbound, $.linkerd.titles.common.successRate],
-          'sum(irate(response_total{classification="success", cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment) / sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment", direction="inbound"}[$interval])) by (deployment)',
-          'deployment/$deployment',
+          $.linkerd.titles.common.successRate,
+          q.successByDeployment,
+          $.linkerd.legends.deployment.regular,
           null,
         ),
         { h: 8, w: 8, x: 0, y: 9 },
       )
-      .addPanel(common.requestVolumeGraph(
-        $.linkerd,
-        '(%(direction)s) %(requestVolume)s' % [$.linkerd.titles.common.inbound, $.linkerd.titles.common.requestRate],
-        {
-          tls: {
-            query: 'sum(irate(request_total{cluster=~"$cluster", direction="inbound", tls="true"}[$interval])) by (namespace)',
-            legend: '🔒ns/{{namespace}}',
+      .addPanel(
+        common.requestVolumeGraph(
+          $.linkerd,
+          $.linkerd.titles.common.requestRate,
+          {
+            tls: {
+              query: q.rate % '=',
+              legend: $.linkerd.legends.namespace.secure,
+            },
+            notls: {
+              query: q.rate % '!=',
+              legend: $.linkerd.legends.namespace.regular,
+            },
           },
-          notls: {
-            query: 'sum(irate(request_total{cluster=~"$cluster", direction="inbound", tls!="true"}[$interval])) by (namespace)',
-            legend: 'ns/{{namespace}}',
-          },
-        },
-      ), { h: 8, w: 8, x: 8, y: 9 })
-      .addPanel(common.p95LatencyGraph(
-        $.linkerd,
-        'histogram_quantile(0.95, sum(irate(response_latency_ms_bucket{cluster=~"$cluster", direction="inbound"}[$interval])) by (le, namespace))',
-      ), { h: 8, w: 8, x: 16, y: 9 })
-      .addPanel(common.header($.linkerd.titles.topLine.namespacesHeader), { h: 2, w: 24, x: 0, y: 17 })
-
+        ),
+        { h: 8, w: 8, x: 8, y: 9 },
+      )
+      .addPanel(
+        common.p95LatencyGraph(
+          $.linkerd,
+          q.quantile % '0.95',
+        ),
+        { h: 8, w: 8, x: 16, y: 9 },
+      )
+      .addPanel(
+        common.header(
+          $.linkerd.titles.topLine.namespacesHeader,
+        ),
+        { h: 2, w: 24, x: 0, y: 17 },
+      )
       .addPanel(
         row.new(
-          title='ns/$namespace',
+          title=$.linkerd.titles.topLine.namespace.title,
           repeat='namespace',
         ),
         { h: 1, w: 24, x: 0, y: 19 }
       ).addPanel(
         common.successRateGraph(
           $.linkerd,
-          '(%(direction)s) %(requestVolume)s' % [$.linkerd.titles.common.inbound, $.linkerd.titles.common.requestRate],
-          'sum(irate(response_total{classification="success", cluster=~"$cluster", namespace="$namespace", direction="inbound"}[$interval])) by (deployment) / sum(irate(response_total{cluster=~"$cluster", namespace="$namespace", direction="inbound"}[$interval])) by (deployment)',
-          'deploy/{{deployment}}',
+          $.linkerd.titles.common.successRate,
+          q.namespace.success,
+          $.linkerd.legends.deployment.regular,
           null,
         ),
         { h: 8, w: 8, x: 0, y: 19 }
       ).addPanel(
         common.requestVolumeGraph(
           $.linkerd,
-          '(%(direction)s) %(requestVolume)s' % [$.linkerd.titles.common.outbound, $.linkerd.titles.common.requestRate],
+          $.linkerd.titles.common.requestRate,
           {
             tls: {
-              query: 'sum(irate(request_total{cluster=~"$cluster", namespace="$namespace", direction="inbound", tls="true"}[$interval])) by (deployment)',
-              legend: '🔒deploy/{{deployment}}',
+              query: q.namespace.rate % '=',
+              legend: $.linkerd.legends.deployment.secure,
             },
             notls: {
-              query: 'sum(irate(request_total{cluster=~"$cluster", namespace="$namespace", direction="inbound", tls!="true"}[$interval])) by (deployment)',
-              legend: 'deploy/{{deployment}}',
+              query: q.namespace.rate % '!=',
+              legend: $.linkerd.legends.deployment.regular,
             },
           },
         ),
@@ -157,7 +166,7 @@ local template = g.template;
       ).addPanel(
         common.p95LatencyGraph(
           $.linkerd,
-          'histogram_quantile(0.95, sum(irate(response_latency_ms_bucket{cluster=~"$cluster", namespace="$namespace", direction="inbound"}[$interval])) by (le, deployment))',
+          q.namespace.quantile % '0.95',
         ),
         { h: 8, w: 8, x: 16, y: 19 }
       )
