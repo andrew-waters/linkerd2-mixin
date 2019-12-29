@@ -1,4 +1,40 @@
 {
+  authority: {
+    quantile: 'histogram_quantile(0.95, sum(irate(response_latency_ms_bucket{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="inbound"}[30s])) by (le, authority))',
+    rate: 'sum(irate(request_total{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="inbound", tls%(tls)s"true"}[$interval])) by (authority)',
+    successByAuthority: '
+      sum(irate(response_total{cluster=~"$cluster", classification="success", namespace=~"$namespace", authority=~"$authority", direction="inbound"}[$interval])) by (authority)
+      /
+      sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="inbound"}[$interval])) by (authority)
+    ',
+    success: '
+      sum(irate(response_total{classification="success", cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="inbound"}[$interval]))
+      /
+      sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="inbound"}[$interval]))
+    ',
+    traffic: {
+      quantile: 'histogram_quantile(%(quantile)s, sum(irate(response_latency_ms_bucket{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="%(direction)s"}[$interval])) by (le, authority))',
+    },
+    topLineTraffic: {
+      rate: 'sum(irate(request_total{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="outbound", tls%(tls)s"true"}[$interval])) by (deployment)',
+      success: '
+        sum(irate(response_total{cluster=~"$cluster", classification="success", namespace=~"$namespace", authority=~"$authority", direction="outbound"}[$interval])) by (deployment)
+        /
+        sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="outbound"}[$interval])) by (deployment)
+      ',
+      quantile: 'histogram_quantile(%(quantile)s, sum(rate(response_latency_ms_bucket{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="outbound"}[$interval])) by (le, deployment))',
+    },
+    trafficByPod: {
+      rate: 'sum(irate(request_total{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="outbound", tls%(tls)s"true"}[$interval])) by (pod)',
+      success: '
+        sum(irate(response_total{cluster=~"$cluster", classification="success", namespace=~"$namespace", authority=~"$authority", direction="outbound"}[$interval])) by (pod)
+        /
+        sum(irate(response_total{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="outbound"}[$interval])) by (pod)
+      ',
+      quantile: 'histogram_quantile(%(quantile)s, sum(rate(response_latency_ms_bucket{cluster=~"$cluster",namespace=~"$namespace", authority=~"$authority", direction="outbound"}[$interval])) by (le, pod))',
+    },
+    volume: 'sum(irate(request_total{cluster=~"$cluster", namespace=~"$namespace", authority=~"$authority", direction="inbound"}[$interval]))',
+  },
   pods: {
     count: {
       inbound: 'count(count(request_total{cluster=~"$cluster", dst_namespace=~"$namespace", dst_pod!="", dst_pod=~"$pod", direction="outbound"}) by (namespace, pod))',

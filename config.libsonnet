@@ -47,25 +47,20 @@ local configMapList = k.core.v1.configMapList;
     },
 
     titles: {
+      authority: {
+        title: 'au/$authority',
+        topLineTraffic: 'TOP-LINE TRAFFIC',
+        inboundTrafficByDeployment: 'INBOUND TRAFFIC BY DEPLOYMENT',
+        inboundTrafficByPod: 'INBOUND TRAFFIC BY POD',
+      },
       common: {
         inbound: 'INBOUND',
         outbound: 'OUTBOUND',
         successRate: 'SUCCESS RATE',
-
-        requestVolume: 'REQUEST VOLUME',
         requestRate: 'REQUEST RATE',
         latency: 'LATENCY',
         p95Latency: 'P95 LATENCY',
-        traffic: {
-          inbound: 'INBOUND TRAFFIC',
-          outbound: 'OUTBOUND TRAFFIC',
-        },
-        tcp: {
-          inbound: 'INBOUND TCP',
-          outbound: 'OUTBOUND TCP',
-        },
       },
-
       topLine: {
         namespace: {
           title: 'ns/$namespace',
@@ -77,9 +72,6 @@ local configMapList = k.core.v1.configMapList;
         topLineHeader: 'TOP LINE',
         namespacesHeader: 'NAMESPACES',
       },
-
-
-
       pod: {
         title: 'po/$pod',
         traffic: {
@@ -101,12 +93,6 @@ local configMapList = k.core.v1.configMapList;
           outbound: 'OUTBOUND',
         },
       },
-
-
-
-
-
-
       statefulSet: {
         namespacesMonitored: 'NAMESPACES MONITORED',
       },
@@ -119,6 +105,10 @@ local configMapList = k.core.v1.configMapList;
     },
 
     legends: {
+      authority: {
+        secure: '🔒au/{{authority}}',
+        regular: 'au/{{authority}}',
+      },
       deployment: {
         secure: '🔒deploy/{{deployment}}',
         regular: 'deploy/{{deployment}}',

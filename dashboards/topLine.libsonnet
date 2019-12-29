@@ -29,7 +29,8 @@ local template = g.template;
           $.linkerd.datasource,
           $.linkerd.multiCluster.enabled,
           $.linkerd.multiCluster.label,
-          $.linkerd.multiCluster.labelName),
+          $.linkerd.multiCluster.labelName,
+        ),
       )
       .addTemplate(
         common.namespace(
@@ -55,7 +56,7 @@ local template = g.template;
         common.branding(
           $.linkerd
         ),
-        { h: 3, w: 24, x: 0, y: 0 }
+        { h: 3, w: 24, x: 0, y: 0 },
       )
 
       .addPanel(
@@ -71,6 +72,7 @@ local template = g.template;
           $.linkerd,
           $.linkerd.titles.topLine.globalRequestVolume,
           q.volume,
+          'rps',
         ),
         { h: 4, w: 8, x: 8, y: 3 },
       )
@@ -123,6 +125,7 @@ local template = g.template;
         common.p95LatencyGraph(
           $.linkerd,
           q.quantile % '0.95',
+          'p95 ns/{{namespace}}',
         ),
         { h: 8, w: 8, x: 16, y: 9 },
       )
@@ -138,7 +141,8 @@ local template = g.template;
           repeat='namespace',
         ),
         { h: 1, w: 24, x: 0, y: 19 }
-      ).addPanel(
+      )
+      .addPanel(
         common.successRateGraph(
           $.linkerd,
           $.linkerd.titles.common.successRate,
@@ -147,7 +151,8 @@ local template = g.template;
           null,
         ),
         { h: 8, w: 8, x: 0, y: 19 }
-      ).addPanel(
+      )
+      .addPanel(
         common.requestVolumeGraph(
           $.linkerd,
           $.linkerd.titles.common.requestRate,
@@ -163,10 +168,12 @@ local template = g.template;
           },
         ),
         { h: 8, w: 8, x: 8, y: 19 }
-      ).addPanel(
+      )
+      .addPanel(
         common.p95LatencyGraph(
           $.linkerd,
           q.namespace.quantile % '0.95',
+          'p95 ns/{{namespace}}',
         ),
         { h: 8, w: 8, x: 16, y: 19 }
       )

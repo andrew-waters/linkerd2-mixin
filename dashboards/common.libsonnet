@@ -76,6 +76,20 @@ local text = g.text;
       multi=true,
     ),
 
+  authority(ds, show, label)::
+    template.new(
+      'authority',
+      ds,
+      'label_values(request_total{cluster=~"$cluster", namespace=~"$namespace"}, authority)',
+      label=label,
+      hide=(if show then '' else 2),
+      includeAll=true,
+      sort=1,
+      refresh=2,
+      current='all',
+      multi=true,
+    ),
+
   pod(ds, show)::
     template.new(
       'pod',
@@ -174,7 +188,7 @@ local text = g.text;
       intervalFactor=1,
     )),
 
-  p95LatencyGraph(config, query)::
+  p95LatencyGraph(config, query, legend)::
     graph_panel.new(
       config.titles.common.p95Latency,
       datasource='%(datasource)s' % config.datasource,
@@ -188,7 +202,8 @@ local text = g.text;
     )
     .addTarget(prometheus.target(
       query,
-      legendFormat='p95 ns/{{namespace}}',
+      legendFormat=legend,
+      //'p95 ns/{{namespace}}',
       intervalFactor=1,
     )),
 
@@ -228,7 +243,7 @@ local text = g.text;
       valueFontSize='80%',
       thresholds='.9,.99',
       colors=config.style.colors,
-      colorValue=true,
+      colorValue=false,
       format='percentunit',
       sparklineShow=true,
       sparklineFillColor=config.style.spark.fill,
@@ -246,14 +261,14 @@ local text = g.text;
       intervalFactor=1,
     )),
 
-  singleStatWithSparkLine(config, title, query)::
+  singleStatWithSparkLine(config, title, query, format)::
     singlestat.new(
       title,
       datasource='%(datasource)s' % config.datasource,
       valueName='current',
       valueFontSize='80%',
       colors=config.style.colors,
-      format='rps',
+      format=format,
       sparklineShow=true,
       sparklineFillColor=config.style.spark.fill,
       sparklineFull=true,

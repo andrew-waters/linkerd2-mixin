@@ -68,7 +68,8 @@ local template = g.template;
         common.singleStatWithSparkLine(
           $.linkerd,
           $.linkerd.titles.common.requestRate,
-          q.rate.request
+          q.rate.request,
+          'rps',
         ),
         { h: 4, w: 8, x: 8, y: 2 },
       )

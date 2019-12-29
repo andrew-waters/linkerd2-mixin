@@ -1,4 +1,4 @@
-// (import 'authority.libsonnet') +
+(import 'authority.libsonnet') +
 // (import 'daemonset.libsonnet') +
 // (import 'deployment.libsonnet') +
 // (import 'grafana.libsonnet') +
